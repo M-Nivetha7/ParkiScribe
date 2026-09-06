@@ -1,0 +1,43 @@
+{
+  "latency": {
+    "mean_latency_ms": 19.50388583003587,
+    "median_latency_ms": 19.66889599998467,
+    "p95_latency_ms": 20.276602100284435,
+    "p99_latency_ms": 20.619629410812195,
+    "fps_throughput": 51.27183417265527
+  },
+  "severity_robustness": {
+    "control": {
+      "top1_accuracy": 0.9986111111111111,
+      "top3_accuracy": 1.0,
+      "top5_accuracy": 1.0,
+      "macro_f1": 0.9986102425126815
+    },
+    "mild": {
+      "top1_accuracy": 0.9958333333333333,
+      "top3_accuracy": 1.0,
+      "top5_accuracy": 1.0,
+      "macro_f1": 0.9958255028858366
+    },
+    "moderate": {
+      "top1_accuracy": 0.9958333333333333,
+      "top3_accuracy": 1.0,
+      "top5_accuracy": 1.0,
+      "macro_f1": 0.9958307275380446
+    },
+    "severe": {
+      "top1_accuracy": 0.9944444444444445,
+      "top3_accuracy": 1.0,
+      "top5_accuracy": 1.0,
+      "macro_f1": 0.9944357453985181
+    }
+  },
+  "word_decoding": {
+    "raw_cer": 0.0,
+    "nlp_cer": 0.0,
+    "raw_wer": 0.0,
+    "nlp_wer": 0.0,
+    "cer_reduction_pct": 0.0,
+    "wer_reduction_pct": 0.0
+  }
+}

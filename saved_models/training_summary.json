@@ -1,0 +1,53 @@
+{
+  "conv1d_bilstm": {
+    "accuracy": 1.0,
+    "top1_accuracy": 1.0,
+    "top3_accuracy": 1.0,
+    "top5_accuracy": 1.0,
+    "macro_precision": 1.0,
+    "macro_recall": 1.0,
+    "macro_f1": 1.0,
+    "weighted_f1": 1.0,
+    "severity_breakdown": {
+      "moderate": {
+        "count": 243,
+        "top1_accuracy": 1.0,
+        "top3_accuracy": 1.0
+      }
+    }
+  },
+  "transformer": {
+    "accuracy": 0.9876543209876543,
+    "top1_accuracy": 0.9876543209876543,
+    "top3_accuracy": 1.0,
+    "top5_accuracy": 1.0,
+    "macro_precision": 0.9885912698412699,
+    "macro_recall": 0.988095238095238,
+    "macro_f1": 0.988074888074888,
+    "weighted_f1": 0.9876332172628468,
+    "severity_breakdown": {
+      "moderate": {
+        "count": 243,
+        "top1_accuracy": 0.9876543209876543,
+        "top3_accuracy": 1.0
+      }
+    }
+  },
+  "baseline_rf": {
+    "accuracy": 0.4279835390946502,
+    "top1_accuracy": 0.4279835390946502,
+    "top3_accuracy": 0.691358024691358,
+    "top5_accuracy": 0.823045267489712,
+    "macro_precision": 0.4507746111912778,
+    "macro_recall": 0.42526455026455023,
+    "macro_f1": 0.41188220558060595,
+    "weighted_f1": 0.414616165288871,
+    "severity_breakdown": {
+      "moderate": {
+        "count": 243,
+        "top1_accuracy": 0.4279835390946502,
+        "top3_accuracy": 0.691358024691358
+      }
+    }
+  }
+}

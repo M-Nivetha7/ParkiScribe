@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AirAssist: Touchless Air-Writing for Parkinson's Assistive Communication</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-left">
+        <div class="logo-badge">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M12 19l7-7 3 3-7 7-3-3z"/>
+            <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/>
+            <path d="M2 2l7.586 7.586"/>
+            <circle cx="11" cy="11" r="2"/>
+          </svg>
+          <span>AirAssist PD</span>
+        </div>
+        <div class="title-wrap">
+          <h1>Contactless Air-Writing Recognition</h1>
+          <p class="subtitle">Intention-Aware Motor Compensation & Assistive Communication for Parkinson's Disease</p>
+        </div>
+      </div>
+      <div class="header-status">
+        <span class="status-pill ready"><span class="dot"></span> Deep Ensemble Ready</span>
+        <span class="status-pill tremor-mode" id="currentSeverityBadge">PD Impairment: Moderate</span>
+      </div>
+    </header>
+
+    <!-- Assistive Speech & Text Output Strip -->
+    <section class="speech-output-section">
+      <div class="output-header">
+        <span class="label">CONSTRUCTED ASSISTIVE TEXT:</span>
+        <div class="word-suggestions" id="wordSuggestions">
+          <!-- Suggested word chips injected here -->
+        </div>
+      </div>
+      <div class="text-display-box">
+        <div class="text-content" id="constructedText">HELLO WORLD</div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" id="btnSpeak" title="Speak text via Text-to-Speech">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+            Speak
+          </button>
+          <button class="btn btn-secondary" id="btnSpace">Space</button>
+          <button class="btn btn-secondary" id="btnBackspace">Backspace</button>
+          <button class="btn btn-danger" id="btnClearText">Clear</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Workspace Grid -->
+    <main class="main-grid">
+      <!-- Left Column: Air-Writing Canvas & Input -->
+      <div class="card canvas-card">
+        <div class="card-header">
+          <div class="tabs">
+            <button class="tab-btn active" data-tab="drawTab">Air-Canvas Drawing</button>
+            <button class="tab-btn" data-tab="simTab">PD Simulator Benchmark</button>
+            <button class="tab-btn" data-tab="camTab">Webcam Tracker</button>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn-sm btn-primary" id="btnRecognizeCanvas" style="background: linear-gradient(135deg, #0284c7, #38bdf8); color: #000; font-weight: 700;">✨ Recognize</button>
+            <button class="btn-sm btn-outline" id="btnClearCanvas">Clear</button>
+          </div>
+        </div>
+
+        <!-- Tab 1: Direct Air Drawing -->
+        <div class="tab-pane active" id="drawTab">
+          <div class="canvas-wrapper">
+            <canvas id="airCanvas" width="480" height="400"></canvas>
+            <div class="canvas-overlay-hints">
+              <span>Write letters, numbers, or full words (e.g. HELP, HI, WATER, OK)</span>
+              <span id="canvasStrokeStatus" class="stroke-status idle">Ready</span>
+            </div>
+          </div>
+          <div class="input-controls">
+            <div class="control-group">
+              <label for="inputTremorMode">Simulate Hand Tremor on Strokes (Optional):</label>
+              <select id="inputTremorMode" class="form-select">
+                <option value="none" selected>None (Clean Natural Handwriting)</option>
+                <option value="mild">Mild PD (4.5-6.0 Hz Tremor)</option>
+                <option value="moderate">Moderate PD (4.0-6.5 Hz Tremor + Rigidity)</option>
+                <option value="severe">Severe PD (Multi-harmonic Tremor + Micrographia)</option>
+              </select>
+            </div>
+            <div class="control-group">
+              <label>Auto-Recognize Pause: <span id="dwellVal">1200ms</span></label>
+              <input type="range" id="dwellSlider" min="600" max="3000" step="100" value="1200">
+            </div>
+          </div>
+          <div style="margin-top: 10px; padding: 6px 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 6px; font-size: 0.76rem; color: #94a3b8; display: flex; gap: 12px; flex-wrap: wrap;">
+            <span>⌨ <strong style="color: #e2e8f0;">[Space]</strong> Add space</span>
+            <span><strong style="color: #e2e8f0;">[Backspace]</strong> Del char</span>
+            <span><strong style="color: #e2e8f0;">[C]</strong> Clear canvas</span>
+            <span><strong style="color: #e2e8f0;">[X]</strong> Reset sentence</span>
+            <span><strong style="color: #e2e8f0;">[P]</strong> Recognize</span>
+            <span><strong style="color: #e2e8f0;">[S]</strong> Speak</span>
+          </div>
+        </div>
+
+        <!-- Tab 2: PD Simulator Benchmark -->
+        <div class="tab-pane" id="simTab">
+          <div class="sim-controls-panel">
+            <div class="form-row">
+              <div class="form-col">
+                <label>Target Character:</label>
+                <select id="simCharSelect" class="form-select">
+                  {% for c in classes %}
+                  <option value="{{ c }}" {% if c == 'A' %}selected{% endif %}>Character '{{ c }}'</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="form-col">
+                <label>Clinical Impairment Level:</label>
+                <select id="simSeveritySelect" class="form-select">
+                  <option value="control">Control (Typical Motor Pattern)</option>
+                  <option value="mild">Mild Parkinsonian Tremor</option>
+                  <option value="moderate" selected>Moderate PD (Tremor + Bradykinesia)</option>
+                  <option value="severe">Severe PD (Tremor + Micrographia + Freezing)</option>
+                </select>
+              </div>
+              <div class="form-col btn-col">
+                <button class="btn btn-primary w-100" id="btnRunSimulation">Generate & Recognize</button>
+              </div>
+            </div>
+          </div>
+          <div class="canvas-wrapper">
+            <canvas id="simCanvas" width="480" height="340"></canvas>
+            <div class="canvas-legend">
+              <span class="legend-item"><span class="color-dot raw"></span> Parkinsonian Raw Motion</span>
+              <span class="legend-item"><span class="color-dot filtered"></span> Filtered Intention Trajectory</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 3: Webcam Tracker -->
+        <div class="tab-pane" id="camTab">
+          <div class="webcam-container">
+            <video id="webcamVideo" autoplay playsinline muted></video>
+            <canvas id="webcamCanvas" width="480" height="360"></canvas>
+          </div>
+          <div class="webcam-controls" style="display: flex; gap: 8px; align-items: center; justify-content: space-between; margin-top: 10px; flex-wrap: wrap;">
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <button class="btn btn-primary" id="btnToggleCam">Start Camera</button>
+              <button class="btn btn-outline" id="btnToggleMirror">🪞 Mirror: ON</button>
+              <button class="btn btn-primary" id="btnRecognizeCam" style="background: linear-gradient(135deg, #0284c7, #38bdf8); color: #000; font-weight: 700;">✨ Recognize</button>
+              <button class="btn btn-outline" id="btnClearCam">Clear</button>
+            </div>
+            <span class="cam-status" id="camStatusText" style="font-size: 0.85rem; color: #94a3b8;">Camera is idle</span>
+          </div>
+          <div style="margin-top: 8px; padding: 6px 12px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; font-size: 0.8rem; color: #94a3b8; display: flex; gap: 16px; flex-wrap: wrap;">
+            <span>☝ <strong style="color: #4ade80;">Index Only:</strong> Draw On-Live</span>
+            <span>✌ <strong style="color: #38bdf8;">2 Fingers (Index+Middle):</strong> Pen Lift / Move</span>
+            <span>✊ <strong style="color: #f87171;">Fist:</strong> Clear Canvas</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right Column: Recognition & Clinical Bio-Feedback -->
+      <div class="card analysis-card">
+        <!-- Top Predicted Character Card -->
+        <div class="prediction-hero-card">
+          <div class="hero-left">
+            <span class="section-tag">PREDICTED INTENTION</span>
+            <div class="hero-char" id="topPredictedChar">A</div>
+            <div class="confidence-badge">
+              Confidence: <strong id="topConfidenceScore">94.8%</strong>
+            </div>
+          </div>
+          <div class="hero-right">
+            <span class="section-tag">TOP-5 CANDIDATES</span>
+            <div class="candidates-list" id="candidatesList">
+              <!-- Progress bars injected here -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Kinematic Bio-Markers & Tremor Spectrum (Module 11) -->
+        <div class="bio-markers-section">
+          <div class="section-header">
+            <h3>Parkinson's Motor Pattern Analysis</h3>
+            <span class="sub-label">Kinematic & Spectral Biomarkers</span>
+          </div>
+          <div class="metrics-grid">
+            <div class="metric-box">
+              <span class="metric-title">4–7 Hz Tremor Power</span>
+              <div class="metric-val" id="valTremorPower">23.4% <small>Moderate</small></div>
+              <div class="metric-bar"><div class="fill" id="barTremorPower" style="width: 42%;"></div></div>
+            </div>
+            <div class="metric-box">
+              <span class="metric-title">Stroke Smoothness</span>
+              <div class="metric-val" id="valJerk">10.7% <small>NJ: 384</small></div>
+              <div class="metric-bar"><div class="fill warn" id="barJerk" style="width: 35%;"></div></div>
+            </div>
+            <div class="metric-box">
+              <span class="metric-title">Writing Speed</span>
+              <div class="metric-val" id="valVelocity">773 <small>px/s</small></div>
+              <div class="metric-bar"><div class="fill ok" id="barVelocity" style="width: 55%;"></div></div>
+            </div>
+            <div class="metric-box">
+              <span class="metric-title">Writing Duration</span>
+              <div class="metric-val" id="valDuration">2.10 <small>sec</small></div>
+              <div class="metric-bar"><div class="fill ok" id="barDuration" style="width: 50%;"></div></div>
+            </div>
+            <div class="metric-box">
+              <span class="metric-title">Movement Amplitude</span>
+              <div class="metric-val" id="valAmplitude">253 x 238 <small>px</small></div>
+              <div class="metric-bar"><div class="fill" id="barAmplitude" style="width: 70%;"></div></div>
+            </div>
+            <div class="metric-box">
+              <span class="metric-title">Micrographia Status</span>
+              <div class="metric-val" id="valMicrographia">Normal <small>No decay</small></div>
+              <div class="metric-bar"><div class="fill ok" id="barMicrographia" style="width: 20%;"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Temporal Attention Timeline -->
+        <div class="attention-section">
+          <div class="section-header">
+            <h3>Spatiotemporal Attention Heatmap</h3>
+            <span class="sub-label">Neural focus on stroke points</span>
+          </div>
+          <div class="attention-timeline" id="attentionTimeline">
+            <!-- Attention blocks rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- Quick Assistive Emergency Phrases -->
+        <div class="emergency-phrases-section">
+          <h3>Quick Assistive Phrases</h3>
+          <div class="phrase-chips">
+            <button class="phrase-btn" data-phrase="I NEED HELP">🆘 I Need Help</button>
+            <button class="phrase-btn" data-phrase="WATER PLEASE">💧 Water Please</button>
+            <button class="phrase-btn" data-phrase="MEDICINE">💊 Medicine</button>
+            <button class="phrase-btn" data-phrase="I AM IN PAIN">⚠️ In Pain</button>
+            <button class="phrase-btn" data-phrase="CALL NURSE">🩺 Call Nurse</button>
+            <button class="phrase-btn" data-phrase="YES">✅ Yes</button>
+            <button class="phrase-btn" data-phrase="NO">❌ No</button>
+            <button class="phrase-btn" data-phrase="THANK YOU">🙏 Thank You</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Ethical & Medical Disclaimer Footer (Module 16) -->
+    <footer class="app-footer">
+      <div class="disclaimer-banner">
+        <span class="disclaimer-icon">🛡️</span>
+        <div class="disclaimer-text">
+          <strong>Important Clinical & Ethical Notice:</strong>
+          This system is designed as an intelligent computer vision and AI-based handwriting assistance and motor pattern analysis tool. It is <em>not intended to replace professional medical diagnosis</em> of Parkinson's Disease or other neurological disorders.
+        </div>
+      </div>
+      <div class="footer-badges">
+        <span>MediaPipe Hands & OpenCV Contactless Input</span>
+        <span>•</span>
+        <span>2D CNN & Spatiotemporal Deep Ensemble</span>
+        <span>•</span>
+        <span>Kinematic & Spectral Motor Biomarkers</span>
+      </div>
+    </footer>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
