@@ -865,11 +865,17 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         // Start Camera
         try {
+          if (!window.isSecureContext || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            throw new Error("Camera access requires http://localhost or HTTPS. Open the app at http://localhost:5050.");
+          }
+
           camStatusText.textContent = "Requesting webcam access...";
           camStream = await navigator.mediaDevices.getUserMedia({
-            video: { width: 640, height: 480, facingMode: "user" }
+            video: true,
+            audio: false
           });
           webcamVideo.srcObject = camStream;
+          await webcamVideo.play();
           webcamVideo.onloadedmetadata = () => {
             syncCanvasDimensions();
           };
@@ -987,7 +993,17 @@ document.addEventListener('DOMContentLoaded', () => {
             }
           }, 45);
         } catch (err) {
-          camStatusText.textContent = `Camera error: ${err.message}`;
+          const errorMessages = {
+            NotAllowedError: "Camera permission was denied. Allow camera access for this site in your browser settings, then try again.",
+            PermissionDeniedError: "Camera permission was denied. Allow camera access for this site in your browser settings, then try again.",
+            NotFoundError: "No camera was found. Connect a webcam and try again.",
+            DevicesNotFoundError: "No camera was found. Connect a webcam and try again.",
+            NotReadableError: "The camera is busy in another app. Close apps using it and try again.",
+            TrackStartError: "The camera is busy in another app. Close apps using it and try again.",
+            OverconstrainedError: "This camera does not support the requested settings. Try again with another camera.",
+            SecurityError: "Camera access is blocked by browser security. Open the app at http://localhost:5050 or use HTTPS."
+          };
+          camStatusText.textContent = `Camera error: ${errorMessages[err.name] || err.message || "Unable to access the camera."}`;
           console.error("Camera access error:", err);
         }
       }

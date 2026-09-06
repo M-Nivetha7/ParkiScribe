@@ -13,7 +13,6 @@ echo "  URL: http://localhost:$PORT"
 echo "======================================================================"
 
 export PYTHONPATH="/opt/homebrew/Caskroom/miniconda/base/envs/physioassist/lib/python3.11/site-packages:$DIR"
-export PYTHONNOUSERSITE=1
 export MPLCONFIGDIR="/tmp"
 
-/usr/local/bin/python3.11 app/web_app.py --port "$PORT" --host 0.0.0.0
+/usr/local/bin/python3 app/web_app.py --port "$PORT" --host 0.0.0.0

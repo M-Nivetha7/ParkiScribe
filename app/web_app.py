@@ -28,7 +28,11 @@ from models.transformer_model import TrajectoryTransformer
 from models.baseline_classifier import BaselineTrajectoryClassifier
 from models.ensemble_recognizer import AirWritingRecognizer
 from nlp.word_recognizer import AssistiveNLPDecoder, ASSISTIVE_VOCABULARY
-from src.hand_tracker import HandTracker as LiveHandTracker, fingers_up as live_fingers_up
+from src.hand_tracker import (
+    HandTracker as LiveHandTracker,
+    fingers_up as live_fingers_up,
+    MEDIAPIPE_AVAILABLE,
+)
 from utils.constants import LANDMARK_INDEX_TIP
 from src.motor_analysis import ParkinsonMotorAnalyzer
 from src.recognizer import AirWritingRecognizer as AirWritingCNNRecognizer
@@ -271,6 +275,11 @@ def api_process_frame():
     if not image_b64:
         return jsonify({"error": "No image provided"}), 400
 
+    if not MEDIAPIPE_AVAILABLE:
+        return jsonify({
+            "error": "MediaPipe is not installed. Install it with: python3.11 -m pip install mediapipe"
+        }), 503
+
     try:
         if "," in image_b64:
             image_b64 = image_b64.split(",")[1]
@@ -293,8 +302,9 @@ def api_process_frame():
 
             fingers = live_fingers_up(lm_list)
 
-            # User's starter code gestures:
-            if fingers == [False, False, False, False] or not any(fingers):
+            # Match the standalone air-writing implementation exactly:
+            # fist clears, index + middle lifts the pen, index alone draws.
+            if fingers == [False, False, False, False]:
                 state = "fist"
             elif fingers[0] and fingers[1]:
                 state = "pen_lift"

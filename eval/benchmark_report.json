@@ -1,10 +1,10 @@
 {
   "latency": {
-    "mean_latency_ms": 19.50388583003587,
-    "median_latency_ms": 19.66889599998467,
-    "p95_latency_ms": 20.276602100284435,
-    "p99_latency_ms": 20.619629410812195,
-    "fps_throughput": 51.27183417265527
+    "mean_latency_ms": 20.035210409995443,
+    "median_latency_ms": 20.19960450002145,
+    "p95_latency_ms": 20.711489900043034,
+    "p99_latency_ms": 20.88976309001623,
+    "fps_throughput": 49.91212867428166
   },
   "severity_robustness": {
     "control": {
@@ -14,22 +14,22 @@
       "macro_f1": 0.9986102425126815
     },
     "mild": {
-      "top1_accuracy": 0.9958333333333333,
+      "top1_accuracy": 0.9986111111111111,
       "top3_accuracy": 1.0,
       "top5_accuracy": 1.0,
-      "macro_f1": 0.9958255028858366
+      "macro_f1": 0.9986102425126815
     },
     "moderate": {
-      "top1_accuracy": 0.9958333333333333,
+      "top1_accuracy": 0.9930555555555556,
       "top3_accuracy": 1.0,
       "top5_accuracy": 1.0,
-      "macro_f1": 0.9958307275380446
+      "macro_f1": 0.9930459879111998
     },
     "severe": {
-      "top1_accuracy": 0.9944444444444445,
+      "top1_accuracy": 0.9611111111111111,
       "top3_accuracy": 1.0,
       "top5_accuracy": 1.0,
-      "macro_f1": 0.9944357453985181
+      "macro_f1": 0.9600257561586187
     }
   },
   "word_decoding": {

@@ -66,7 +66,7 @@ Evaluated across 1,620 multi-subject trajectory samples spanning 36 classes (`0-
 
 ### A. Run Interactive Web Application
 ```bash
-PYTHONNOUSERSITE=1 /usr/local/bin/python3.11 app/web_app.py --port 5050
+/usr/local/bin/python3 app/web_app.py --port 5050
 ```
 Open `http://localhost:5050` in your web browser.
 
