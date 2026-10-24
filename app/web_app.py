@@ -336,7 +336,7 @@ def api_process_frame():
 
 def run_server():
     parser = argparse.ArgumentParser(description="Start Air-Writing Web Application")
-    parser.add_argument("--port", type=int, default=5050)
+    parser.add_argument("--port", type=int, default=int(os.environ.get("PORT", "5050")))
     parser.add_argument("--host", type=str, default="0.0.0.0")
     args = parser.parse_args()
 

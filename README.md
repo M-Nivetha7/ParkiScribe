@@ -53,39 +53,45 @@ graph LR
 
 Evaluated across 1,620 multi-subject trajectory samples spanning 36 classes (`0-9`, `A-Z`):
 
-| Impairment Severity Tier | Top-1 Accuracy | Top-3 Accuracy | Top-5 Accuracy | Macro F1 | Inference Latency |
-| :--- | :---: | :---: | :---: | :---: | :---: |
-| **Control (Typical)** | **99.86%** | 100.00% | 100.00% | 0.9986 | 19.5 ms (~51 FPS) |
-| **Mild PD (4.5–6 Hz Tremor)** | **99.58%** | 100.00% | 100.00% | 0.9958 | 19.5 ms (~51 FPS) |
-| **Moderate PD (+ Rigidity)** | **99.58%** | 100.00% | 100.00% | 0.9958 | 19.5 ms (~51 FPS) |
-| **Severe PD (+ Micrographia)** | **99.44%** | 100.00% | 100.00% | 0.9944 | 19.5 ms (~51 FPS) |
+| Impairment Severity Tier       | Top-1 Accuracy | Top-3 Accuracy | Top-5 Accuracy | Macro F1 | Inference Latency |
+| :----------------------------- | :------------: | :------------: | :------------: | :------: | :---------------: |
+| **Control (Typical)**          |   **99.86%**   |    100.00%     |    100.00%     |  0.9986  | 19.5 ms (~51 FPS) |
+| **Mild PD (4.5–6 Hz Tremor)**  |   **99.58%**   |    100.00%     |    100.00%     |  0.9958  | 19.5 ms (~51 FPS) |
+| **Moderate PD (+ Rigidity)**   |   **99.58%**   |    100.00%     |    100.00%     |  0.9958  | 19.5 ms (~51 FPS) |
+| **Severe PD (+ Micrographia)** |   **99.44%**   |    100.00%     |    100.00%     |  0.9944  | 19.5 ms (~51 FPS) |
 
 ---
 
 ## 4. Quickstart & Usage
 
 ### A. Run Interactive Web Application
+
 ```bash
-/usr/local/bin/python3 app/web_app.py --port 5050
+python -m app.web_app
 ```
-Open `http://localhost:5050` in your web browser.
+
+Open `http://localhost:5050` in your web browser. On hosting platforms, the app uses the `PORT` environment variable automatically.
 
 ### B. Run Interactive Terminal Demo
+
 ```bash
 PYTHONNOUSERSITE=1 /usr/local/bin/python3.11 cli_demo.py
 ```
 
 ### C. Run Full Test Suite
+
 ```bash
 PYTHONNOUSERSITE=1 /usr/local/bin/python3.11 -m unittest discover -s tests -p "test_*.py" -v
 ```
 
 ### D. Retrain All Models
+
 ```bash
 PYTHONNOUSERSITE=1 /usr/local/bin/python3.11 train.py --epochs 30 --samples_per_class 45 --model all
 ```
 
 ### E. Run Systematic Benchmark
+
 ```bash
 PYTHONNOUSERSITE=1 /usr/local/bin/python3.11 eval/benchmark.py
 ```
